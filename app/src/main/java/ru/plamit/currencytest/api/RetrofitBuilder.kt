@@ -11,17 +11,21 @@ import ru.plamit.currencytest.BuildConfig
 import ru.plamit.currencytest.api.ICurrencyApi.Companion.BASE_URL
 import java.util.concurrent.TimeUnit
 
+/**
+ * Class for create api implementation of interface
+ * TODO: add response interceptor
+ */
 class RetrofitBuilder {
 
     companion object {
         private const val HTTP_LOG_TAG = "OkHttp"
     }
 
-    fun createApi(): ICurrencyApi {
+    fun createApi(test: Boolean = false): ICurrencyApi {
         val httpClient = OkHttpClient.Builder().apply {
             connectTimeout(20, TimeUnit.SECONDS)
             readTimeout(20, TimeUnit.SECONDS)
-            addInterceptor(LoggingInterceptor.Builder()
+            if (!test) addInterceptor(LoggingInterceptor.Builder()
                     .loggable(BuildConfig.DEBUG)
                     .setLevel(Level.BASIC)
                     .log(Platform.INFO)

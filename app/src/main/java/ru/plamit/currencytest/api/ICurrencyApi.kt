@@ -2,8 +2,8 @@ package ru.plamit.currencytest.api
 
 import io.reactivex.Observable
 import retrofit2.http.GET
-import retrofit2.http.Path
-import java.util.*
+import retrofit2.http.Query
+import ru.plamit.currencytest.entity.CurrencyRates
 
 interface ICurrencyApi{
 
@@ -12,5 +12,5 @@ interface ICurrencyApi{
     }
 
     @GET("latest")
-    fun getLatestCurrencies(@Path ("base") base: String): Observable<Currency>
+    fun getLatestCurrencies(@Query ("base") base: String): Observable<CurrencyRates>
 }
