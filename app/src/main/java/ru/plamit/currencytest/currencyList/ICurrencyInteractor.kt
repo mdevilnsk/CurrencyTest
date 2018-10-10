@@ -1,6 +1,7 @@
 package ru.plamit.currencytest.currencyList
 
 import io.reactivex.Single
+import ru.plamit.currencytest.entity.CountryInfo
 import ru.plamit.currencytest.entity.CurrencyRates
 
 /**
@@ -9,5 +10,5 @@ import ru.plamit.currencytest.entity.CurrencyRates
 interface ICurrencyInteractor{
 
     fun getCurrencies(baseCurrency: String): Single<CurrencyRates>
-
+    fun getCountryInfoByCurrency(currency: String): Single<CountryInfo>
 }

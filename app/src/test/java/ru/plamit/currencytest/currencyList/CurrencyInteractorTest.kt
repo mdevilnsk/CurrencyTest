@@ -1,40 +1,38 @@
 package ru.plamit.currencytest.currencyList
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.gson.internal.LinkedTreeMap
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
+import ru.plamit.currencytest.api.ICountryApi
 import ru.plamit.currencytest.api.ICurrencyApi
+import ru.plamit.currencytest.entity.CountryInfo
 import ru.plamit.currencytest.entity.CurrencyRates
+import ru.plamit.currencytest.utils.DefaultSchedulerTest
 
 @Suppress("NonAsciiCharacters", "UNCHECKED_CAST")
 @RunWith(MockitoJUnitRunner::class)
 class CurrencyInteractorTest {
 
-    @get:Rule
-    var rule: TestRule =
-
-            InstantTaskExecutorRule()
-
     private lateinit var interactor: CurrencyInteractor
 
-    val api = mock(ICurrencyApi::class.java)
+    private val api = mock(ICurrencyApi::class.java)
+    private val countryApi = mock(ICountryApi::class.java)
+    private val testScheduler = DefaultSchedulerTest()
 
     @Before
     fun setUp() {
-        interactor = CurrencyInteractor(api)
+        interactor = CurrencyInteractor(api, countryApi, testScheduler)
     }
 
     @After
     fun tearDown() {
         verifyNoMoreInteractions(api)
+        verifyNoMoreInteractions(countryApi)
     }
 
     @Test
@@ -64,7 +62,51 @@ class CurrencyInteractorTest {
         testObserver.assertError(error)
     }
 
-    fun generateCurrency(base: String): CurrencyRates {
+    @Test
+    fun `should return information about country and cache value`() {
+        //precondition
+        `when`(countryApi.getCountryInfoByCurrency(anyString()))
+                .thenReturn(Single.just(arrayListOf(CountryInfo("flag", "name"))))
+        //action
+        val observer = interactor.getCountryInfoByCurrency("CUR").test()
+        Thread.sleep(20)
+        val observer2 = interactor.getCountryInfoByCurrency("CUR").test()
+        //result
+        verify(countryApi).getCountryInfoByCurrency("CUR")
+        observer.assertValue(CountryInfo("flag", "name", "CUR"))
+        observer2.assertValue(CountryInfo("flag", "name", "CUR"))
+    }
+
+    @Test
+    fun `should return information about different country`() {
+        //precondition
+        `when`(countryApi.getCountryInfoByCurrency(anyString()))
+                .thenReturn(Single.just(arrayListOf(CountryInfo("flag", "name"))))
+                .thenReturn(Single.just(arrayListOf(CountryInfo("galf", "eman"))))
+        //action
+        val observer = interactor.getCountryInfoByCurrency("CUR").test()
+        val observer2 = interactor.getCountryInfoByCurrency("RUC").test()
+        //result
+        verify(countryApi).getCountryInfoByCurrency("CUR")
+        verify(countryApi).getCountryInfoByCurrency("RUC")
+        observer.assertValue(CountryInfo("flag", "name", "CUR"))
+        observer2.assertValue(CountryInfo("galf", "eman", "RUC"))
+    }
+
+    @Test
+    fun `should return error for currency`() {
+        //precondition
+        val error = Throwable("error")
+        `when`(countryApi.getCountryInfoByCurrency(anyString()))
+                .thenReturn(Single.error(error))
+        //action
+        val observer = interactor.getCountryInfoByCurrency("CUR").test()
+        //result
+        verify(countryApi).getCountryInfoByCurrency("CUR")
+        observer.assertError(error)
+    }
+
+    private fun generateCurrency(base: String): CurrencyRates {
 
         val currencies = LinkedTreeMap<String, Double>()
         when (base) {

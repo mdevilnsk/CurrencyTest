@@ -23,7 +23,7 @@ class CurrencyResponseInterceptor : Interceptor{
             in 200..299 -> return response
             else -> {
                 val baseResponse = Gson().fromJson(response.body()!!.string(), BaseErrorResponse::class.java)
-                val e = RuntimeException(baseResponse.error)
+                val e = RuntimeException(baseResponse.error ?: baseResponse.message ?: "unknown error")
                 throw e
             }
         }
