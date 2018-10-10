@@ -34,7 +34,8 @@ class RetrofitBuilderTest {
                     System.out.println(it)
                     latch.countDown()
                 }, {
-                    it.printStackTrace()
+                    assertEquals("Invalid base",it.message)
+                    latch.countDown()
                 })
 
         latch.await(10, TimeUnit.SECONDS)

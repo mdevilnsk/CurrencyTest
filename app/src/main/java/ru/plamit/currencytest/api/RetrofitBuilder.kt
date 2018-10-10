@@ -25,6 +25,7 @@ class RetrofitBuilder {
         val httpClient = OkHttpClient.Builder().apply {
             connectTimeout(20, TimeUnit.SECONDS)
             readTimeout(20, TimeUnit.SECONDS)
+            addInterceptor(CurrencyResponseInterceptor())
             if (!test) addInterceptor(LoggingInterceptor.Builder()
                     .loggable(BuildConfig.DEBUG)
                     .setLevel(Level.BASIC)
