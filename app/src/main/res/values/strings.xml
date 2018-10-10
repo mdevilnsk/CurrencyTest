@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CurrencyTest</string>
+    <string name="currency_hint">0.0</string>
 </resources>
