@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Class for create api implementation of interface
- * TODO: add response interceptor
  */
 class RetrofitBuilder {
 
