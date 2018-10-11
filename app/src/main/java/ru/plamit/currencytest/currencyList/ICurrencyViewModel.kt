@@ -12,6 +12,7 @@ interface ICurrencyViewModel {
      * view state for list currencies
      */
     val viewState: MutableLiveData<List<CurrencyItemView>>
+    val baseView: MutableLiveData<CurrencyItemView>
 
     /**
      * set base currency

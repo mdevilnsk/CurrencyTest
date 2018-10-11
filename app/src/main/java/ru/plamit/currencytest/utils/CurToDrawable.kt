@@ -22,21 +22,22 @@ fun currToDrawable(cur: String): Int {
         "ILS" -> R.drawable.isr
         "INR" -> R.drawable.ind
         "JPY" -> R.drawable.jpn
-        "MXN" -> R.drawable.kor
-        "MYR" -> R.drawable.mex
-        "NOK" -> R.drawable.mys
-        "NZD" -> R.drawable.nor
-        "PHP" -> R.drawable.nzl
-        "PLN" -> R.drawable.phl
-        "RON" -> R.drawable.pol
-        "RUB" -> R.drawable.rou
-        "SEK" -> R.drawable.rus
-        "SGD" -> R.drawable.swe
-        "THB" -> R.drawable.sgp
-        "TRY" -> R.drawable.tha
-        "ZAR" -> R.drawable.tur
-        "EUR" -> R.drawable.zwe
-        "USD" -> R.drawable.eur
+        "KRW" -> R.drawable.kor
+        "MXN" -> R.drawable.mex
+        "MYR" -> R.drawable.mys
+        "NOK" -> R.drawable.nor
+        "NZD" -> R.drawable.nzl
+        "PHP" -> R.drawable.phl
+        "PLN" -> R.drawable.pol
+        "RON" -> R.drawable.rou
+        "RUB" -> R.drawable.rus
+        "SEK" -> R.drawable.swe
+        "SGD" -> R.drawable.sgp
+        "THB" -> R.drawable.tha
+        "TRY" -> R.drawable.tur
+        "ZAR" -> R.drawable.zwe
+        "EUR" -> R.drawable.eur
+        "USD" -> R.drawable.usa
         else -> R.drawable.rus
     }
 }

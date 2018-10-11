@@ -17,6 +17,7 @@ class CurrencyViewModel(
 ) : ViewModel(), ICurrencyViewModel {
 
     override val viewState: MutableLiveData<List<CurrencyItemView>> = MutableLiveData()
+    override val baseView: MutableLiveData<CurrencyItemView> = MutableLiveData()
 
     var repeatDelay = 1000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
@@ -26,6 +27,19 @@ class CurrencyViewModel(
     @SuppressLint("CheckResult")
     override fun setBaseCurrency(cur: String) {
         baseCurrency = cur
+        interactor.getCountriesInfo().subscribe({countries->
+            countries.find { countryInfo -> countryInfo.currencyCode == baseCurrency}?.let {
+                baseView.postValue(CurrencyItemView(
+                        it.flag,
+                        baseCurrency,
+                        it.name,
+                        BigDecimal(0.0).toDouble(),
+                        true
+                ))
+            }
+        },{
+
+        })
         koeff = BigDecimal(1)
     }
 
@@ -52,16 +66,6 @@ class CurrencyViewModel(
 
             val views: MutableList<CurrencyItemView> = ArrayList()
 
-            countries.find { countryInfo -> countryInfo.currencyCode == baseCurrency}?.let {
-                views.add(CurrencyItemView(
-                        it.flag,
-                        baseCurrency,
-                        it.name,
-                        BigDecimal(0.0).toDouble(),
-                        true
-                ))
-            }
-
             for ((currency, rate) in rates.rates) {
                 val country = countries.find { it.currencyCode == currency}
                 country?.let {
@@ -74,9 +78,7 @@ class CurrencyViewModel(
                     ))
                 }
             }
-
             return@BiFunction views
-
         })
 
         rateViews.subscribe({
