@@ -32,8 +32,8 @@ class CurrencyViewModel(
                 baseView.postValue(CurrencyItemView(
                         it.flag,
                         baseCurrency,
-                        it.name,
-                        BigDecimal(0.0).toDouble(),
+                        it.currencyName,
+                        BigDecimal("1").toDouble(),
                         true
                 ))
             }
@@ -63,16 +63,14 @@ class CurrencyViewModel(
     @SuppressLint("CheckResult")
     private fun loadQuery() {
         val rateViews: Single<List<CurrencyItemView>> = Single.zip(interactor.getCurrencies(baseCurrency), interactor.getCountriesInfo(), BiFunction { rates, countries ->
-
             val views: MutableList<CurrencyItemView> = ArrayList()
-
             for ((currency, rate) in rates.rates) {
                 val country = countries.find { it.currencyCode == currency}
                 country?.let {
                     views.add(CurrencyItemView(
                             it.flag,
                             currency,
-                            it.name,
+                            it.currencyName,
                             (rate * koeff).toDouble(),
                             false
                     ))

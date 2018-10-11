@@ -9,7 +9,10 @@ import kotlinx.android.synthetic.main.activity_currency.*
 import kotlinx.android.synthetic.main.currency_item.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.plamit.currencytest.R
+import ru.plamit.currencytest.utils.addTextWatcher
 import ru.plamit.currencytest.utils.currToDrawable
+import java.lang.NumberFormatException
+import java.math.BigDecimal
 
 
 class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionListener {
@@ -44,6 +47,15 @@ class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionL
             }
         })
         currencyViewModel.startLoading()
+        currencyRateEt.addTextWatcher { s, _, _, count ->
+            if (s?.length!! > 0)
+                try {
+                    val base = s.toString().toDouble()
+                    currencyViewModel.setBaseValue(BigDecimal.valueOf(base))
+                } catch (e: NumberFormatException) {
+                }
+
+        }
     }
 
     override fun onStop() {
