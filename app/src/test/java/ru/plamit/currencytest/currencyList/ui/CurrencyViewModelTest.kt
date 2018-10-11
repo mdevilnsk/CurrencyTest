@@ -65,12 +65,12 @@ class CurrencyViewModelTest {
         viewModel.startLoading()
 
         //result
-        Thread.sleep(LOAD_DELAY *2.toLong())
+        Thread.sleep(LOAD_DELAY + LOAD_DELAY - 10)
         verify(interactor, times(2)).getCountriesInfo()
         verify(interactor, times(2)).getCurrencies("USD")
         verify(viewStateObserver, times(2)).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
+                CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(0.86).toDouble(), false)
         ))
     }
 
@@ -90,8 +90,8 @@ class CurrencyViewModelTest {
         verify(interactor).getCountriesInfo()
         verify(interactor).getCurrencies("USD")
         verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
+                CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(0.86).toDouble(), false)
         ))
     }
 
@@ -119,16 +119,16 @@ class CurrencyViewModelTest {
         verify(interactor, times(3)).getCountriesInfo()
         interactorInOrder.verify(interactor).getCurrencies("RUB")
 
-        verify(baseViewObserver).onChanged(CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(0.0).toDouble(), true))
+        verify(baseViewObserver).onChanged(CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(0.0).toDouble(), true))
 
         viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
+                CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(0.86).toDouble(), false)
         ))
 
         viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.015).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.013).toDouble(), false)
+                CurrencyItemView("flag_USD", "USD", "name_USD", BigDecimal(0.015).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(0.013).toDouble(), false)
         ))
     }
 
@@ -150,14 +150,14 @@ class CurrencyViewModelTest {
         verify(interactor, times(2)).getCountriesInfo()
         verify(interactor, times(2)).getCurrencies("USD")
         inOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
+                CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(0.86).toDouble(), false)
         ))
 
 
         inOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(130.0).toDouble(), false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(1.72).toDouble(), false)
+                CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(130.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "name_EUR", BigDecimal(1.72).toDouble(), false)
         ))
     }
 
