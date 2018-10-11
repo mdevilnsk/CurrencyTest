@@ -18,7 +18,7 @@ class CurrencyViewModel(
 
     override val viewState: MutableLiveData<List<CurrencyItemView>> = MutableLiveData()
 
-    var repeatDelay = 1000L //repeat loading delay. Public for tests
+    var repeatDelay = 30000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
     private var baseCurrency = "USD"
     private var koeff = BigDecimal(1)
@@ -52,7 +52,7 @@ class CurrencyViewModel(
 
             val views: MutableList<CurrencyItemView> = ArrayList()
 
-            countries.find { countryInfo -> countryInfo.currencies?.asSequence()?.map { it.code }?.contains(baseCurrency) == true }?.let {
+            countries.find { countryInfo -> countryInfo.currencyCode == baseCurrency}?.let {
                 views.add(CurrencyItemView(
                         it.flag,
                         baseCurrency,
@@ -63,7 +63,7 @@ class CurrencyViewModel(
             }
 
             for ((currency, rate) in rates.rates) {
-                val country = countries.find { countryInfo -> countryInfo.currencies?.asSequence()?.map { it.code }?.contains(currency) == true }
+                val country = countries.find { it.currencyCode == currency}
                 country?.let {
                     views.add(CurrencyItemView(
                             it.flag,

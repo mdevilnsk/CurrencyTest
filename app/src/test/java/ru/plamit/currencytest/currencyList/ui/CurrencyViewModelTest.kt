@@ -16,7 +16,6 @@ import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import ru.plamit.currencytest.currencyList.ICurrencyInteractor
 import ru.plamit.currencytest.entity.CountryInfo
-import ru.plamit.currencytest.entity.CurrenciesItem
 import ru.plamit.currencytest.entity.CurrencyRates
 import java.math.BigDecimal
 
@@ -185,6 +184,7 @@ class CurrencyViewModelTest {
     private fun generateCountryInfo(currCode: String) = CountryInfo(
             "flag_$currCode",
             "country_$currCode",
-            arrayListOf(CurrenciesItem("", currCode, "cur_$currCode"))
+            currCode,
+            "name_$currCode"
     )
 }

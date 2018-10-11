@@ -9,9 +9,9 @@ import ru.plamit.currencytest.entity.CountryInfo
 interface ICountryApi{
 
     companion object {
-        const val COUNTRY_URL = "https://restcountries.eu/"
+        const val COUNTRY_URL = "http://plamit.ru/"
     }
 
-    @GET("rest/v2/all")
-    fun getCountriesInfo(@Query("fields") query: String = "name;flag;currencies"): Single<List<CountryInfo>>
+    @GET("countries/")
+    fun getCountriesInfo(): Single<List<CountryInfo>>
 }

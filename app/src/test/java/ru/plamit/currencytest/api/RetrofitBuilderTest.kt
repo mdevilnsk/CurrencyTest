@@ -50,8 +50,10 @@ class RetrofitBuilderTest {
                 .getCountriesInfo()
                 .subscribe({
                     System.out.println(it)
-                    assertEquals("Afghanistan", it[0].name)
-                    assertEquals("https://restcountries.eu/data/afg.svg", it[0].flag)
+                    assertEquals("Australia", it[0].name)
+                    assertEquals("https://restcountries.eu/data/aus.svg", it[0].flag)
+                    assertEquals("AUD", it[0].currencyCode)
+                    assertEquals("Australian dollar", it[0].currencyName)
                     latch.countDown()
                 }, {
                     it.printStackTrace()
