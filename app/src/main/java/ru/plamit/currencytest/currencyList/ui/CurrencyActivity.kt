@@ -1,4 +1,4 @@
-package ru.plamit.currencytest
+package ru.plamit.currencytest.currencyList.ui
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
@@ -6,8 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_currency.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import ru.plamit.currencytest.currencyList.ui.CurrencyListAdapter
-import ru.plamit.currencytest.currencyList.ui.CurrencyViewModel
+import ru.plamit.currencytest.R
 
 
 class CurrencyActivity : AppCompatActivity() {

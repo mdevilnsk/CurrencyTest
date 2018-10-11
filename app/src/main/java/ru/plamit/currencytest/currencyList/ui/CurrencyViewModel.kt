@@ -18,7 +18,7 @@ class CurrencyViewModel(
 
     override val viewState: MutableLiveData<List<CurrencyItemView>> = MutableLiveData()
 
-    var repeatDelay = 30000L //repeat loading delay. Public for tests
+    var repeatDelay = 1000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
     private var baseCurrency = "USD"
     private var koeff = BigDecimal(1)
