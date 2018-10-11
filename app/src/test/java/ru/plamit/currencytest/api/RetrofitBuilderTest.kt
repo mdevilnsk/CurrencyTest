@@ -46,31 +46,14 @@ class RetrofitBuilderTest {
         val latch = CountDownLatch(1)
         RetrofitBuilder()
                 .createCountryApi(true)
-                .getCountryInfoByCurrency("RUB")
+                .getCountriesInfo()
                 .subscribe({
                     System.out.println(it)
-                    assertEquals("Russian Federation", it[0].name)
-                    assertEquals("https://restcountries.eu/data/rus.svg", it[0].flag)
+                    assertEquals("Afghanistan", it[0].name)
+                    assertEquals("https://restcountries.eu/data/afg.svg", it[0].flag)
                     latch.countDown()
                 }, {
                     it.printStackTrace()
-                })
-
-        latch.await(10, TimeUnit.SECONDS)
-    }
-
-    @Test
-    fun `should return error for country`() {
-        val latch = CountDownLatch(1)
-        RetrofitBuilder()
-                .createCountryApi(true)
-                .getCountryInfoByCurrency("DEDED")
-                .subscribe({
-                    System.out.println(it)
-                    latch.countDown()
-                }, {
-                    assertEquals("Bad Request", it.message)
-                    latch.countDown()
                 })
 
         latch.await(10, TimeUnit.SECONDS)

@@ -18,14 +18,14 @@ class CurrencyInteractor(
             api.getLatestCurrencies(baseCurrency)
                     .compose(scheduler.applySingle())
 
-    override fun getCountryInfoByCurrency(currency: String): Single<CountryInfo> {
-        val info = countryList.find { it.code == currency }
-        if (info != null) return Single.just(info)
-        return countryApi.getCountryInfoByCurrency(currency)
+    override fun getCountriesInfo(): Single<List<CountryInfo>> {
+        if (countryList.isNotEmpty()) return Single.just(countryList)
+        return countryApi.getCountriesInfo()
                 .map {
-                    it[0].code = currency
-                    countryList.add(it[0])
-                    it[0]
-                }.compose(scheduler.applySingle())
+                    countryList.clear()
+                    countryList.addAll(it)
+                    countryList
+                }
+                .compose(scheduler.applySingle())
     }
 }

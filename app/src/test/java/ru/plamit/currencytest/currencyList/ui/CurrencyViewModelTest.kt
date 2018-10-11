@@ -15,6 +15,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import ru.plamit.currencytest.currencyList.ICurrencyInteractor
+import ru.plamit.currencytest.entity.CountryInfo
+import ru.plamit.currencytest.entity.CurrenciesItem
 import ru.plamit.currencytest.entity.CurrencyRates
 
 @Suppress("NonAsciiCharacters", "UNCHECKED_CAST")
@@ -33,8 +35,13 @@ class CurrencyViewModelTest {
 
     @Before
     fun setUp() {
+        `when`(interactor.getCountriesInfo()).thenReturn(Single.just(arrayListOf(
+                generateCountryInfo("USD"),
+                generateCountryInfo("RUB"),
+                generateCountryInfo("EUR")
+        )))
         viewModel = CurrencyViewModel(interactor)
-        viewModel.repeatDelay = 10
+        viewModel.repeatDelay = 200
     }
 
     @After
@@ -45,17 +52,48 @@ class CurrencyViewModelTest {
     @Test fun `should start request and repeat every (1) second`(){
         //precondition
         `when`(interactor.getCurrencies(anyString())).thenReturn(Single.just(generateCurrency("USD")))
+
+
         //action
         viewModel.viewState.observeForever(viewStateObserver)
         viewModel.startLoading()
 
         //result
-        Thread.sleep(40)
-        verify(viewStateObserver).onChanged(arrayListOf())
+        Thread.sleep(300)
+        verify(interactor, times(2)).getCountriesInfo()
+        verify(interactor, times(2)).getCurrencies("USD")
+        verify(viewStateObserver, times(2)).onChanged(arrayListOf(
+                CurrencyItemView("flag_USD", "USD", "country_USD",0.0,true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",65.0,false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",0.86,false)
+        ))
     }
 
-//    @Test fun `should`(){}
-//    @Test fun `should`(){}
+    @Test fun `should stop requests`(){
+        //precondition
+        `when`(interactor.getCurrencies(anyString())).thenReturn(Single.just(generateCurrency("USD")))
+
+
+        //action
+        viewModel.viewState.observeForever(viewStateObserver)
+        viewModel.startLoading()
+        Thread.sleep(20)
+        viewModel.stopLoading()
+        //result
+        Thread.sleep(300)
+
+        verify(interactor).getCountriesInfo()
+        verify(interactor).getCurrencies("USD")
+        verify(viewStateObserver).onChanged(arrayListOf(
+                CurrencyItemView("flag_USD", "USD", "country_USD",0.0,true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",65.0,false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",0.86,false)
+        ))
+    }
+
+    @Test fun `should set different base currency`(){
+
+    }
 //    @Test fun `should`(){}
 //    @Test fun `should`(){}
 //    @Test fun `should`(){}
@@ -80,13 +118,9 @@ class CurrencyViewModelTest {
         return CurrencyRates("date", currencies, base)
     }
 
-    private fun convertToViewItem(rates: CurrencyRates): CurrencyItemView {
-        return CurrencyItemView(
-                "flagUrl$",
-                "name",
-                "desc",
-                1.0,
-                true
-        )
-    }
+    private fun generateCountryInfo(currCode: String) = CountryInfo(
+            "flag_$currCode",
+            "country_$currCode",
+            arrayListOf(CurrenciesItem("", currCode,"cur_$currCode"))
+    )
 }

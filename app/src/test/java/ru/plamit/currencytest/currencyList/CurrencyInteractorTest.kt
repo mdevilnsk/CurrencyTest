@@ -11,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import ru.plamit.currencytest.api.ICountryApi
 import ru.plamit.currencytest.api.ICurrencyApi
 import ru.plamit.currencytest.entity.CountryInfo
+import ru.plamit.currencytest.entity.CurrenciesItem
 import ru.plamit.currencytest.entity.CurrencyRates
 import ru.plamit.currencytest.utils.DefaultSchedulerTest
 
@@ -63,47 +64,23 @@ class CurrencyInteractorTest {
     }
 
     @Test
-    fun `should return information about country and cache value`() {
+    fun `should return information about countries and cache value`() {
         //precondition
-        `when`(countryApi.getCountryInfoByCurrency(anyString()))
-                .thenReturn(Single.just(arrayListOf(CountryInfo("flag", "name"))))
+        val countries = arrayListOf(
+                generateCountryInfo("USD"),
+                generateCountryInfo("RUB"),
+                generateCountryInfo("EUR")
+        )
+        `when`(countryApi.getCountriesInfo())
+                .thenReturn(Single.just(countries))
         //action
-        val observer = interactor.getCountryInfoByCurrency("CUR").test()
+        val observer = interactor.getCountriesInfo().test()
         Thread.sleep(20)
-        val observer2 = interactor.getCountryInfoByCurrency("CUR").test()
+        val observer2 = interactor.getCountriesInfo().test()
         //result
-        verify(countryApi).getCountryInfoByCurrency("CUR")
-        observer.assertValue(CountryInfo("flag", "name", "CUR"))
-        observer2.assertValue(CountryInfo("flag", "name", "CUR"))
-    }
-
-    @Test
-    fun `should return information about different country`() {
-        //precondition
-        `when`(countryApi.getCountryInfoByCurrency(anyString()))
-                .thenReturn(Single.just(arrayListOf(CountryInfo("flag", "name"))))
-                .thenReturn(Single.just(arrayListOf(CountryInfo("galf", "eman"))))
-        //action
-        val observer = interactor.getCountryInfoByCurrency("CUR").test()
-        val observer2 = interactor.getCountryInfoByCurrency("RUC").test()
-        //result
-        verify(countryApi).getCountryInfoByCurrency("CUR")
-        verify(countryApi).getCountryInfoByCurrency("RUC")
-        observer.assertValue(CountryInfo("flag", "name", "CUR"))
-        observer2.assertValue(CountryInfo("galf", "eman", "RUC"))
-    }
-
-    @Test
-    fun `should return error for currency`() {
-        //precondition
-        val error = Throwable("error")
-        `when`(countryApi.getCountryInfoByCurrency(anyString()))
-                .thenReturn(Single.error(error))
-        //action
-        val observer = interactor.getCountryInfoByCurrency("CUR").test()
-        //result
-        verify(countryApi).getCountryInfoByCurrency("CUR")
-        observer.assertError(error)
+        verify(countryApi).getCountriesInfo()
+        observer.assertValue(countries)
+        observer2.assertValue(countries)
     }
 
     private fun generateCurrency(base: String): CurrencyRates {
@@ -125,4 +102,10 @@ class CurrencyInteractorTest {
         }
         return CurrencyRates("date", currencies, base)
     }
+
+    private fun generateCountryInfo(currCode: String) = CountryInfo(
+            "flag_$currCode",
+            "country_$currCode",
+            arrayListOf(CurrenciesItem("", currCode,"cur_$currCode"))
+    )
 }
