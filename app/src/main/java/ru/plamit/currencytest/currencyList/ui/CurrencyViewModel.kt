@@ -5,7 +5,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
+import ru.plamit.currencytest.R
 import ru.plamit.currencytest.currencyList.ICurrencyInteractor
+import ru.plamit.currencytest.currencyList.ICurrencyRouter
 import ru.plamit.currencytest.currencyList.ICurrencyViewModel
 import java.math.BigDecimal
 import java.util.*
@@ -18,6 +20,8 @@ class CurrencyViewModel(
 
     override val viewState: MutableLiveData<List<CurrencyItemView>> = MutableLiveData()
     override val baseView: MutableLiveData<CurrencyItemView> = MutableLiveData()
+
+    var router: ICurrencyRouter? = null
 
     var repeatDelay = 1000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
@@ -38,7 +42,7 @@ class CurrencyViewModel(
                 ))
             }
         },{
-
+            router?.routeToError(R.string.wrong_base_currency)
         })
         koeff = BigDecimal(1)
     }
@@ -82,7 +86,12 @@ class CurrencyViewModel(
         rateViews.subscribe({
             viewState.postValue(it)
         }, {
-
+            router?.routeToError(R.string.cant_load)
         })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopLoading()
     }
 }

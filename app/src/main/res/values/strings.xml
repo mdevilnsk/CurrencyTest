@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">CurrencyTest</string>
     <string name="currency_hint">1</string>
+    <string name="error">ERROR</string>
+    <string name="retry">Retry</string>
+
+    <!--Errors-->
+    <string name="error_unknown">Unknown error</string>
+    <string name="wrong_number">Wrong number! Please input number in </string>
+    <string name="wrong_base_currency">WrongNumber</string>
+    <string name="cant_load">Can not load currencies!</string>
 </resources>

@@ -2,6 +2,7 @@ package ru.plamit.currencytest.currencyList.ui
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,13 +10,18 @@ import kotlinx.android.synthetic.main.activity_currency.*
 import kotlinx.android.synthetic.main.currency_item.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.plamit.currencytest.R
+import ru.plamit.currencytest.currencyList.ICurrencyRouter
+import ru.plamit.currencytest.utils.ErrorMessageDialogFragment
 import ru.plamit.currencytest.utils.addTextWatcher
 import ru.plamit.currencytest.utils.currToDrawable
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 
 
-class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionListener {
+class CurrencyActivity :
+        AppCompatActivity(),
+        CurrencyListAdapter.ItemSelectionListener,
+        ICurrencyRouter {
 
     private val currencyViewModel: CurrencyViewModel by viewModel()
 
@@ -25,6 +31,7 @@ class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency)
         if (savedInstanceState == null) currencyViewModel.setBaseCurrency("USD")
+        currencyViewModel.router = this
     }
 
     override fun onStart() {
@@ -52,9 +59,11 @@ class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionL
                 try {
                     val base = s.toString().toDouble()
                     currencyViewModel.setBaseValue(BigDecimal.valueOf(base))
-                } catch (e: NumberFormatException) {
+                } catch (e: Throwable) {
+                    ErrorMessageDialogFragment.buildDialog(getString(R.string.error), getString(R.string.wrong_number), click = {
+                        currencyRateEt.setText("1")
+                    }).show(supportFragmentManager,"errorDialog")
                 }
-
         }
     }
 
@@ -65,5 +74,13 @@ class CurrencyActivity : AppCompatActivity(), CurrencyListAdapter.ItemSelectionL
 
     override fun onItemSelected(currency: String) {
         currencyViewModel.setBaseCurrency(currency)
+    }
+
+    override fun routeToError(@StringRes message: Int) {
+        currencyViewModel.stopLoading()
+        ErrorMessageDialogFragment.buildDialog(getString(R.string.error), getString(message), click = {
+            it.dismiss()
+            currencyViewModel.startLoading()
+        }).show(supportFragmentManager,"errorDialog")
     }
 }
