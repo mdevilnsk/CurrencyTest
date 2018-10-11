@@ -1,10 +1,10 @@
 package ru.plamit.currencytest.api
 
 import android.content.Context
+import android.graphics.drawable.PictureDrawable
+import com.bumptech.glide.Glide
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import okhttp3.OkHttpClient
 import okhttp3.internal.platform.Platform
 import retrofit2.Retrofit
@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.plamit.currencytest.BuildConfig
 import ru.plamit.currencytest.api.ICountryApi.Companion.COUNTRY_URL
 import ru.plamit.currencytest.api.ICurrencyApi.Companion.BASE_URL
+import ru.plamit.currencytest.utils.svg.SvgSoftwareLayerSetter
 import java.util.concurrent.TimeUnit
 
 /**
@@ -60,5 +61,7 @@ class RetrofitBuilder {
                 .build())
     }.build()
 
-    fun createPicasso(ctx: Context): Picasso = Picasso.Builder(ctx).downloader(OkHttp3Downloader(buildOkHttpClient(DEFAULT_TIMEOUT, false))).build()
+    fun getGlideBuilder(ctx: Context) = Glide.with(ctx)
+            .`as`(PictureDrawable::class.java)
+            .listener(SvgSoftwareLayerSetter())
 }

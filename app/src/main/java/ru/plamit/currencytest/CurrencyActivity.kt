@@ -1,13 +1,14 @@
 package ru.plamit.currencytest
 
 import android.arch.lifecycle.Observer
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_currency.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.plamit.currencytest.currencyList.ui.CurrencyListAdapter
 import ru.plamit.currencytest.currencyList.ui.CurrencyViewModel
+
 
 class CurrencyActivity : AppCompatActivity() {
 
@@ -26,7 +27,7 @@ class CurrencyActivity : AppCompatActivity() {
         currenciesListRv.adapter = adapter
 
         currencyViewModel.viewState.observe(this, Observer { currenciesList ->
-            currenciesList?.let{adapter.items = ArrayList(it)}
+            currenciesList?.let { adapter.items = ArrayList(it) }
         })
         currencyViewModel.startLoading()
     }

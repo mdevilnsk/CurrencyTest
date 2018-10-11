@@ -12,7 +12,6 @@ import ru.plamit.currencytest.utils.IDefaultScheduler
 val currencyModule = module {
     single { RetrofitBuilder().createApi() }
     single { RetrofitBuilder().createCountryApi() }
-    single { RetrofitBuilder().createPicasso(get()) }
     single { DefaultScheduler() as IDefaultScheduler }
     single { CurrencyInteractor(get(), get(), get()) as ICurrencyInteractor }
     viewModel { CurrencyViewModel(get()) }
