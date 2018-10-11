@@ -26,12 +26,14 @@ class CurrencyViewModelTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
+    companion object {
+        private const val LOAD_DELAY = 200L
+    }
+
     private lateinit var viewModel: CurrencyViewModel
-
     private val interactor = mock(ICurrencyInteractor::class.java)
-
     private val viewStateObserver = mock(Observer::class.java
-            , Mockito.withSettings().verboseLogging()
+//            , Mockito.withSettings().verboseLogging()
     ) as Observer<List<CurrencyItemView>>
 
     @Before
@@ -42,7 +44,7 @@ class CurrencyViewModelTest {
                 generateCountryInfo("EUR")
         )))
         viewModel = CurrencyViewModel(interactor)
-        viewModel.repeatDelay = 200
+        viewModel.repeatDelay = LOAD_DELAY
     }
 
     @After
@@ -50,7 +52,8 @@ class CurrencyViewModelTest {
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
-    @Test fun `should start request and repeat every (1) second`(){
+    @Test
+    fun `should start request and repeat every (1) second`() {
         //precondition
         `when`(interactor.getCurrencies(anyString())).thenReturn(Single.just(generateCurrency("USD")))
 
@@ -60,17 +63,18 @@ class CurrencyViewModelTest {
         viewModel.startLoading()
 
         //result
-        Thread.sleep(300)
+        Thread.sleep(LOAD_DELAY * 2.toLong())
         verify(interactor, times(2)).getCountriesInfo()
         verify(interactor, times(2)).getCurrencies("USD")
         verify(viewStateObserver, times(2)).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
         ))
     }
 
-    @Test fun `should stop requests`(){
+    @Test
+    fun `should stop requests`() {
         //precondition
         `when`(interactor.getCurrencies(anyString())).thenReturn(Single.just(generateCurrency("USD")))
 
@@ -86,13 +90,14 @@ class CurrencyViewModelTest {
         verify(interactor).getCountriesInfo()
         verify(interactor).getCurrencies("USD")
         verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
         ))
     }
 
-    @Test fun `should set different base currency`(){
+    @Test
+    fun `should set different base currency`() {
 
         val interactorInOrder = inOrder(interactor)
         val viewInOrder = inOrder(viewStateObserver)
@@ -104,29 +109,58 @@ class CurrencyViewModelTest {
         //action
         viewModel.viewState.observeForever(viewStateObserver)
         viewModel.startLoading()
-        Thread.sleep(100)
+        Thread.sleep(50)
         viewModel.setBaseCurrency("RUB")
 
         //result
-        Thread.sleep(300)
+        Thread.sleep(LOAD_DELAY * 1.5.toLong())
+
         interactorInOrder.verify(interactor).getCurrencies("USD")
         interactorInOrder.verify(interactor).getCountriesInfo()
         interactorInOrder.verify(interactor).getCurrencies("RUB")
         interactorInOrder.verify(interactor).getCountriesInfo()
+
         viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
         ))
+
         viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(0.0).toDouble(),true),
-                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.015).toDouble(),false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.013).toDouble(),false)
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.015).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.013).toDouble(), false)
         ))
     }
-//    @Test fun `should`(){}
-//    @Test fun `should`(){}
-//    @Test fun `should`(){}
+
+    @Test fun `should set currency rate and multiply for value`(){
+        val inOrder = inOrder(viewStateObserver)
+
+        //precondition
+        `when`(interactor.getCurrencies(anyString())).thenReturn(Single.just(generateCurrency("USD")))
+
+        //action
+        viewModel.viewState.observeForever(viewStateObserver)
+        viewModel.startLoading()
+        Thread.sleep(50)
+        viewModel.setBaseValue(BigDecimal(2))
+
+        //result
+        Thread.sleep(LOAD_DELAY * 1.5.toLong())
+        verify(interactor, times(2)).getCountriesInfo()
+        verify(interactor, times(2)).getCurrencies("USD")
+        inOrder.verify(viewStateObserver).onChanged(arrayListOf(
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(65.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(0.86).toDouble(), false)
+        ))
+
+        inOrder.verify(viewStateObserver).onChanged(arrayListOf(
+                CurrencyItemView("flag_USD", "USD", "country_USD", BigDecimal(0.0).toDouble(), true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB", BigDecimal(130.0).toDouble(), false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR", BigDecimal(1.72).toDouble(), false)
+        ))
+    }
 
     private fun generateCurrency(base: String): CurrencyRates {
 
@@ -151,6 +185,6 @@ class CurrencyViewModelTest {
     private fun generateCountryInfo(currCode: String) = CountryInfo(
             "flag_$currCode",
             "country_$currCode",
-            arrayListOf(CurrenciesItem("", currCode,"cur_$currCode"))
+            arrayListOf(CurrenciesItem("", currCode, "cur_$currCode"))
     )
 }

@@ -21,10 +21,12 @@ class CurrencyViewModel(
     var repeatDelay = 1000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
     private var baseCurrency = "USD"
+    private var koeff = BigDecimal(1)
 
     @SuppressLint("CheckResult")
     override fun setBaseCurrency(cur: String) {
         baseCurrency = cur
+        koeff = BigDecimal(1)
     }
 
     override fun startLoading() {
@@ -41,7 +43,7 @@ class CurrencyViewModel(
     }
 
     override fun setBaseValue(value: BigDecimal) {
-
+        koeff = value
     }
 
     @SuppressLint("CheckResult")
@@ -67,7 +69,7 @@ class CurrencyViewModel(
                             it.flag,
                             currency,
                             it.name,
-                            rate.toDouble(),
+                            (rate * koeff).toDouble(),
                             false
                     ))
                 }
