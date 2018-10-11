@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.plamit.currencytest.BuildConfig
 import ru.plamit.currencytest.api.ICountryApi.Companion.COUNTRY_URL
 import ru.plamit.currencytest.api.ICurrencyApi.Companion.BASE_URL
-import ru.plamit.currencytest.utils.svg.SvgSoftwareLayerSetter
 import java.util.concurrent.TimeUnit
 
 /**
@@ -60,8 +59,4 @@ class RetrofitBuilder {
                 .tag(HTTP_LOG_TAG)
                 .build())
     }.build()
-
-    fun getGlideBuilder(ctx: Context) = Glide.with(ctx)
-            .`as`(PictureDrawable::class.java)
-            .listener(SvgSoftwareLayerSetter())
 }
