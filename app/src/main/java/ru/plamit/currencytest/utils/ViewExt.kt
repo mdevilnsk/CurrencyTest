@@ -10,7 +10,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 
-    var lastClickTime: Long = 0L
+/**
+ * Different android view extension functions
+ */
+
+var lastClickTime: Long = 0L
 
 fun View.onClick(action: () -> Unit) {
     setOnClickListener {
@@ -54,7 +58,6 @@ fun Array<View>.invisible() = forEach { it.invisible() }
 fun Array<View>.gone() = forEach { it.gone() }
 fun Array<View>.visibleOrGone(isVisible: Boolean) = forEach { it.visibleOrGone(isVisible) }
 fun Array<View>.visibleOrInvisible(isVisible: Boolean) = forEach { it.visibleOrInvisible(isVisible) }
-
 
 fun TextView.handleEnterKey(action: () -> Unit) {
     setOnEditorActionListener { _, actionId, event ->

@@ -11,6 +11,9 @@ interface ICurrencyApi{
         const val BASE_URL = "https://revolut.duckdns.org/"
     }
 
+    /**
+     * get's current currencies rate
+     */
     @GET("latest")
     fun getLatestCurrencies(@Query ("base") base: String): Single<CurrencyRates>
 }

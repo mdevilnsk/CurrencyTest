@@ -14,6 +14,17 @@ import android.view.WindowManager
 import kotlinx.android.synthetic.main.error_fragment.*
 import ru.plamit.currencytest.R
 
+/**
+ * Dialog message for showing errors
+ * use as ErrorMessageDialogFragment.buildDialog(
+ *      @param title - string of title
+ *      @param message - string of message
+ *      @param icom - set icon
+ *      @param click - action that will be invoked on click
+ *   ).show(
+ *      @param fragment manager - supportFragmentManager or fragmentManager
+ *      @param tag - tag for fragment)
+ */
 class ErrorMessageDialogFragment : AppCompatDialogFragment() {
 
     private var buttonClick: (DialogFragment) -> Unit = { _ -> dismiss() }

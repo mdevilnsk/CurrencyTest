@@ -20,8 +20,18 @@ interface ICurrencyViewModel {
      */
     fun setBaseCurrency(cur: String)
 
+    /**
+     * start loading currencies rates
+     */
     fun startLoading()
+
+    /**
+     * stop loading currencies rates
+     */
     fun stopLoading()
 
+    /**
+     * set current currency value
+     */
     fun setBaseValue(value: BigDecimal)
 }

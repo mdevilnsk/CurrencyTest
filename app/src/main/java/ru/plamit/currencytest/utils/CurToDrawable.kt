@@ -1,8 +1,12 @@
 package ru.plamit.currencytest.utils
 
-import android.support.annotation.DrawableRes
 import ru.plamit.currencytest.R
 
+/**
+ * Converts currency name to image drawable icon
+ * @param cur - currency name like USD
+ * @return - ResDrawable integer value with vector drawable icon
+ */
 fun currToDrawable(cur: String): Int {
     return when (cur) {
         "AUD" -> R.drawable.aus

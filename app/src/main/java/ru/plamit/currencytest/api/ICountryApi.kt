@@ -12,6 +12,9 @@ interface ICountryApi{
         const val COUNTRY_URL = "http://plamit.ru/"
     }
 
+    /**
+     * get countries information - country, flag, currency
+     */
     @GET("countries/")
     fun getCountriesInfo(): Single<List<CountryInfo>>
 }
