@@ -2,6 +2,7 @@ package ru.plamit.currencytest.currencyList
 
 import android.arch.lifecycle.MutableLiveData
 import ru.plamit.currencytest.currencyList.ui.CurrencyItemView
+import java.math.BigDecimal
 
 /**
  * View model for currency list
@@ -21,5 +22,5 @@ interface ICurrencyViewModel {
     fun startLoading()
     fun stopLoading()
 
-    fun setBaseValue(value: Double)
+    fun setBaseValue(value: BigDecimal)
 }

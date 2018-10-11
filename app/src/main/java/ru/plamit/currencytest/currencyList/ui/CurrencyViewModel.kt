@@ -7,6 +7,7 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.plamit.currencytest.currencyList.ICurrencyInteractor
 import ru.plamit.currencytest.currencyList.ICurrencyViewModel
+import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
@@ -23,7 +24,7 @@ class CurrencyViewModel(
 
     @SuppressLint("CheckResult")
     override fun setBaseCurrency(cur: String) {
-
+        baseCurrency = cur
     }
 
     override fun startLoading() {
@@ -39,7 +40,8 @@ class CurrencyViewModel(
         startLoadingTimer = null
     }
 
-    override fun setBaseValue(value: Double) {
+    override fun setBaseValue(value: BigDecimal) {
+
     }
 
     @SuppressLint("CheckResult")
@@ -53,7 +55,7 @@ class CurrencyViewModel(
                         it.flag,
                         baseCurrency,
                         it.name,
-                        0.0,
+                        BigDecimal(0.0).toDouble(),
                         true
                 ))
             }
@@ -65,7 +67,7 @@ class CurrencyViewModel(
                             it.flag,
                             currency,
                             it.name,
-                            rate,
+                            rate.toDouble(),
                             false
                     ))
                 }

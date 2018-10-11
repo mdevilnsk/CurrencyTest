@@ -18,6 +18,7 @@ import ru.plamit.currencytest.currencyList.ICurrencyInteractor
 import ru.plamit.currencytest.entity.CountryInfo
 import ru.plamit.currencytest.entity.CurrenciesItem
 import ru.plamit.currencytest.entity.CurrencyRates
+import java.math.BigDecimal
 
 @Suppress("NonAsciiCharacters", "UNCHECKED_CAST")
 @RunWith(MockitoJUnitRunner::class)
@@ -30,7 +31,7 @@ class CurrencyViewModelTest {
     private val interactor = mock(ICurrencyInteractor::class.java)
 
     private val viewStateObserver = mock(Observer::class.java
-//            , Mockito.withSettings().verboseLogging()
+            , Mockito.withSettings().verboseLogging()
     ) as Observer<List<CurrencyItemView>>
 
     @Before
@@ -63,9 +64,9 @@ class CurrencyViewModelTest {
         verify(interactor, times(2)).getCountriesInfo()
         verify(interactor, times(2)).getCurrencies("USD")
         verify(viewStateObserver, times(2)).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD",0.0,true),
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",65.0,false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",0.86,false)
+                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
         ))
     }
 
@@ -85,14 +86,43 @@ class CurrencyViewModelTest {
         verify(interactor).getCountriesInfo()
         verify(interactor).getCurrencies("USD")
         verify(viewStateObserver).onChanged(arrayListOf(
-                CurrencyItemView("flag_USD", "USD", "country_USD",0.0,true),
-                CurrencyItemView("flag_RUB", "RUB", "country_RUB",65.0,false),
-                CurrencyItemView("flag_EUR", "EUR", "country_EUR",0.86,false)
+                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
         ))
     }
 
     @Test fun `should set different base currency`(){
 
+        val interactorInOrder = inOrder(interactor)
+        val viewInOrder = inOrder(viewStateObserver)
+        //precondition
+        `when`(interactor.getCurrencies(anyString()))
+                .thenReturn(Single.just(generateCurrency("USD")))
+                .thenReturn(Single.just(generateCurrency("RUB")))
+
+        //action
+        viewModel.viewState.observeForever(viewStateObserver)
+        viewModel.startLoading()
+        Thread.sleep(100)
+        viewModel.setBaseCurrency("RUB")
+
+        //result
+        Thread.sleep(300)
+        interactorInOrder.verify(interactor).getCurrencies("USD")
+        interactorInOrder.verify(interactor).getCountriesInfo()
+        interactorInOrder.verify(interactor).getCurrencies("RUB")
+        interactorInOrder.verify(interactor).getCountriesInfo()
+        viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
+                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.0).toDouble(),true),
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(65.0).toDouble(),false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.86).toDouble(),false)
+        ))
+        viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
+                CurrencyItemView("flag_RUB", "RUB", "country_RUB",BigDecimal(0.0).toDouble(),true),
+                CurrencyItemView("flag_USD", "USD", "country_USD",BigDecimal(0.015).toDouble(),false),
+                CurrencyItemView("flag_EUR", "EUR", "country_EUR",BigDecimal(0.013).toDouble(),false)
+        ))
     }
 //    @Test fun `should`(){}
 //    @Test fun `should`(){}
@@ -100,19 +130,19 @@ class CurrencyViewModelTest {
 
     private fun generateCurrency(base: String): CurrencyRates {
 
-        val currencies = LinkedTreeMap<String, Double>()
+        val currencies = LinkedTreeMap<String, BigDecimal>()
         when (base) {
             "RUB" -> {
-                currencies["USD"] = 0.015; currencies["EUR"] = 0.013
+                currencies["USD"] = BigDecimal(0.015); currencies["EUR"] = BigDecimal(0.013)
             }
             "USD" -> {
-                currencies["RUB"] = 65.0; currencies["EUR"] = 0.86
+                currencies["RUB"] = BigDecimal(65.0); currencies["EUR"] = BigDecimal(0.86)
             }
             "EUR" -> {
-                currencies["RUB"] = 75.0; currencies["USD"] = 1.15
+                currencies["RUB"] = BigDecimal(75.0); currencies["USD"] = BigDecimal(1.15)
             }
             else -> {
-                currencies["RUB"] = 1.0; currencies["USD"] = 0.015; currencies["EUR"] = 0.013
+                currencies["RUB"] = BigDecimal(1.0); currencies["USD"] = BigDecimal(0.015); currencies["EUR"] = BigDecimal(0.013)
             }
         }
         return CurrencyRates("date", currencies, base)

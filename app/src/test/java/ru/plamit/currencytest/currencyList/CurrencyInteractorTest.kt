@@ -14,6 +14,7 @@ import ru.plamit.currencytest.entity.CountryInfo
 import ru.plamit.currencytest.entity.CurrenciesItem
 import ru.plamit.currencytest.entity.CurrencyRates
 import ru.plamit.currencytest.utils.DefaultSchedulerTest
+import java.math.BigDecimal
 
 @Suppress("NonAsciiCharacters", "UNCHECKED_CAST")
 @RunWith(MockitoJUnitRunner::class)
@@ -85,19 +86,19 @@ class CurrencyInteractorTest {
 
     private fun generateCurrency(base: String): CurrencyRates {
 
-        val currencies = LinkedTreeMap<String, Double>()
+        val currencies = LinkedTreeMap<String, BigDecimal>()
         when (base) {
             "RUB" -> {
-                currencies["USD"] = 0.015; currencies["EUR"] = 0.013
+                currencies["USD"] = BigDecimal(0.015); currencies["EUR"] = BigDecimal(0.013)
             }
             "USD" -> {
-                currencies["RUB"] = 65.0; currencies["EUR"] = 0.86
+                currencies["RUB"] = BigDecimal(65.0); currencies["EUR"] = BigDecimal(0.86)
             }
             "EUR" -> {
-                currencies["RUB"] = 75.0; currencies["USD"] = 1.15
+                currencies["RUB"] = BigDecimal(75.0); currencies["USD"] = BigDecimal(1.15)
             }
             else -> {
-                currencies["RUB"] = 1.0; currencies["USD"] = 0.015; currencies["EUR"] = 0.013
+                currencies["RUB"] = BigDecimal(1.0); currencies["USD"] = BigDecimal(0.015); currencies["EUR"] = BigDecimal(0.013)
             }
         }
         return CurrencyRates("date", currencies, base)

@@ -2,6 +2,7 @@ package ru.plamit.currencytest.api
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.math.BigDecimal
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -15,7 +16,7 @@ class RetrofitBuilderTest {
                 .getLatestCurrencies("AUD")
                 .subscribe({
                     System.out.println(it)
-                    assertEquals(it.rates["AUD"] ?: 0.0, 0.0, 0.0)
+                    assertEquals(it.rates["AUD"] ?: BigDecimal(0.0), BigDecimal(0.0))
                     latch.countDown()
                 }, {
                     it.printStackTrace()
