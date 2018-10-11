@@ -1,8 +1,5 @@
 package ru.plamit.currencytest.api
 
-import android.content.Context
-import android.graphics.drawable.PictureDrawable
-import com.bumptech.glide.Glide
 import com.ihsanbal.logging.Level
 import com.ihsanbal.logging.LoggingInterceptor
 import okhttp3.OkHttpClient

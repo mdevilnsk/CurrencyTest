@@ -1,5 +1,6 @@
 package ru.plamit.currencytest.currencyList.ui
 
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.currency_item.view.*
 import org.koin.standalone.KoinComponent
 import ru.plamit.currencytest.R
+import ru.plamit.currencytest.utils.currToDrawable
 
 class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.CurrencyViewHolder>(), KoinComponent {
 
@@ -24,7 +26,7 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.CurrencyVie
     override fun onBindViewHolder(viwHolder: CurrencyViewHolder, position: Int) {
         val item = items[position]
         viwHolder.itemView.apply {
-//            glide.load(item.flagUrl).into(currencyFlag)
+            currencyFlag.setImageDrawable(VectorDrawableCompat.create(resources, currToDrawable(item.name), null))
             currencyName.text = item.name
             currencyDescription.text = item.description
             currencyEditTil.isEnabled = item.base
