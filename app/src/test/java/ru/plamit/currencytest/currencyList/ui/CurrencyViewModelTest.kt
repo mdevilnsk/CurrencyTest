@@ -119,7 +119,7 @@ class CurrencyViewModelTest {
         verify(interactor, times(3)).getCountriesInfo()
         interactorInOrder.verify(interactor).getCurrencies("RUB")
 
-        verify(baseViewObserver).onChanged(CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(0.0).toDouble(), true))
+        verify(baseViewObserver).onChanged(CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal("1.0").toDouble(), true))
 
         viewInOrder.verify(viewStateObserver).onChanged(arrayListOf(
                 CurrencyItemView("flag_RUB", "RUB", "name_RUB", BigDecimal(65.0).toDouble(), false),
