@@ -3,6 +3,7 @@ package ru.plamit.currencytest.currencyList.ui
 import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.util.Log
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.plamit.currencytest.R
@@ -48,6 +49,7 @@ class CurrencyViewModel(
     }
 
     override fun startLoading() {
+        stopLoading()
         startLoadingTimer = Timer("startLoading")
         startLoadingTimer?.schedule(0L, repeatDelay) {
             loadQuery()
