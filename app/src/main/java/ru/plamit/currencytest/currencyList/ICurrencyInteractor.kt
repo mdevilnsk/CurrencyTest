@@ -17,5 +17,5 @@ interface ICurrencyInteractor{
     /**
      * get countries information
      */
-    fun getCountriesInfo(): Single<List<CountryInfo>>
+    fun getCountriesInfo(): Single<List<CountryInfo?>>
 }

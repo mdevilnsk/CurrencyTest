@@ -32,7 +32,7 @@ class CurrencyViewModel(
     override fun setBaseCurrency(cur: String) {
         baseCurrency = cur
         interactor.getCountriesInfo().subscribe({countries->
-            countries.find { countryInfo -> countryInfo.currencyCode == baseCurrency}?.let {
+            countries.find { countryInfo -> countryInfo?.currencyCode == baseCurrency}?.let {
                 baseView.postValue(CurrencyItemView(
                         it.flag,
                         baseCurrency,
@@ -69,7 +69,7 @@ class CurrencyViewModel(
         val rateViews: Single<List<CurrencyItemView>> = Single.zip(interactor.getCurrencies(baseCurrency), interactor.getCountriesInfo(), BiFunction { rates, countries ->
             val views: MutableList<CurrencyItemView> = ArrayList()
             for ((currency, rate) in rates.rates) {
-                val country = countries.find { it.currencyCode == currency}
+                val country = countries.find { it != null && it.currencyCode == currency}
                 country?.let {
                     views.add(CurrencyItemView(
                             it.flag,

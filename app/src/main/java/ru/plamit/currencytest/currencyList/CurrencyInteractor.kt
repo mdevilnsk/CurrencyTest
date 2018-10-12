@@ -13,13 +13,13 @@ class CurrencyInteractor(
         private val scheduler: IDefaultScheduler
 ) : ICurrencyInteractor {
 
-    private val countryList: MutableList<CountryInfo> = ArrayList()
+    private val countryList: MutableList<CountryInfo?> = ArrayList()
     override fun getCurrencies(baseCurrency: String): Single<CurrencyRates> =
             api.getLatestCurrencies(baseCurrency)
                     .compose(scheduler.applySingle())
 
-    override fun getCountriesInfo(): Single<List<CountryInfo>> {
-        if (countryList.isNotEmpty()) return Single.just(countryList)
+    override fun getCountriesInfo(): Single<List<CountryInfo?>> {
+        if (countryList.isNotEmpty() && countryList.none { it == null }) return Single.just(countryList)
         return countryApi.getCountriesInfo()
                 .map {
                     countryList.clear()

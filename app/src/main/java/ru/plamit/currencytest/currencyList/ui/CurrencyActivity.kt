@@ -14,6 +14,7 @@ import ru.plamit.currencytest.currencyList.ICurrencyRouter
 import ru.plamit.currencytest.utils.ErrorMessageDialogFragment
 import ru.plamit.currencytest.utils.addTextWatcher
 import ru.plamit.currencytest.utils.currToDrawable
+import ru.plamit.currencytest.utils.gone
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 
@@ -41,11 +42,13 @@ class CurrencyActivity :
         adapter.itemSelectionListener = this
 
         currencyViewModel.viewState.observe(this, Observer { currenciesList ->
+            loadingPb.gone()
             currenciesList?.let { adapter.items = ArrayList(it) }
         })
 
         currencyViewModel.baseView.observe(this, Observer { item ->
             item?.let {
+                loadingPb.gone()
                 currencyFlag.setImageDrawable(VectorDrawableCompat.create(resources, currToDrawable(item.name), null))
                 currencyName.text = item.name
                 currencyDescription.text = item.description
