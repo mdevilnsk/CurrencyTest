@@ -3,7 +3,6 @@ package ru.plamit.currencytest.currencyList.ui
 import android.annotation.SuppressLint
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.util.Log
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.plamit.currencytest.R
@@ -32,8 +31,8 @@ class CurrencyViewModel(
     @SuppressLint("CheckResult")
     override fun setBaseCurrency(cur: String) {
         baseCurrency = cur
-        interactor.getCountriesInfo().subscribe({countries->
-            countries.find { countryInfo -> countryInfo?.currencyCode == baseCurrency}?.let {
+        interactor.getCountriesInfo().subscribe({ countries ->
+            countries.find { countryInfo -> countryInfo?.currencyCode == baseCurrency }?.let {
                 baseView.postValue(CurrencyItemView(
                         it.flag,
                         baseCurrency,
@@ -42,7 +41,7 @@ class CurrencyViewModel(
                         true
                 ))
             }
-        },{
+        }, {
             router?.routeToError(R.string.wrong_base_currency)
         })
         koeff = BigDecimal(1)
@@ -71,7 +70,7 @@ class CurrencyViewModel(
         val rateViews: Single<List<CurrencyItemView>> = Single.zip(interactor.getCurrencies(baseCurrency), interactor.getCountriesInfo(), BiFunction { rates, countries ->
             val views: MutableList<CurrencyItemView> = ArrayList()
             for ((currency, rate) in rates.rates) {
-                val country = countries.find { it != null && it.currencyCode == currency}
+                val country = countries.find { it != null && it.currencyCode == currency }
                 country?.let {
                     views.add(CurrencyItemView(
                             it.flag,
