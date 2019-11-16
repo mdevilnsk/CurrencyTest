@@ -1,8 +1,8 @@
 package ru.plamit.currencytest.currencyList.ui
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import ru.plamit.currencytest.R
@@ -23,7 +23,7 @@ class CurrencyViewModel(
 
     var router: ICurrencyRouter? = null
 
-    var repeatDelay = 1000L //repeat loading delay. Public for tests
+    var repeatDelay = 3600000L //repeat loading delay. Public for tests
     private var startLoadingTimer: Timer? = null
     private var baseCurrency = "USD"
     private var koeff = BigDecimal(1)
@@ -40,6 +40,7 @@ class CurrencyViewModel(
                         BigDecimal("1").toDouble(),
                         true
                 ))
+                startLoading()
             }
         }, {
             router?.routeToError(R.string.wrong_base_currency)
@@ -51,7 +52,7 @@ class CurrencyViewModel(
         stopLoading()
         startLoadingTimer = Timer("startLoading")
         startLoadingTimer?.schedule(0L, repeatDelay) {
-            loadQuery()
+            loadQuery(true)
         }
     }
 
@@ -63,11 +64,12 @@ class CurrencyViewModel(
 
     override fun setBaseValue(value: BigDecimal) {
         koeff = value
+        loadQuery()
     }
 
     @SuppressLint("CheckResult")
-    private fun loadQuery() {
-        val rateViews: Single<List<CurrencyItemView>> = Single.zip(interactor.getCurrencies(baseCurrency), interactor.getCountriesInfo(), BiFunction { rates, countries ->
+    private fun loadQuery(force: Boolean = false) {
+        val rateViews: Single<List<CurrencyItemView>> = Single.zip(interactor.getCurrencies(baseCurrency, force), interactor.getCountriesInfo(), BiFunction { rates, countries ->
             val views: MutableList<CurrencyItemView> = ArrayList()
             for ((currency, rate) in rates.rates) {
                 val country = countries.find { it != null && it.currencyCode == currency }

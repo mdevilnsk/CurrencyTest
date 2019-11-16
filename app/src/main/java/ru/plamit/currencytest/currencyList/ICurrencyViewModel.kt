@@ -1,6 +1,6 @@
 package ru.plamit.currencytest.currencyList
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import ru.plamit.currencytest.currencyList.ui.CurrencyItemView
 import java.math.BigDecimal
 

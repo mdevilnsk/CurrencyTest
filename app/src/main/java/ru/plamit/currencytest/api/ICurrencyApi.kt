@@ -8,7 +8,7 @@ import ru.plamit.currencytest.entity.CurrencyRates
 interface ICurrencyApi{
 
     companion object {
-        const val BASE_URL = "https://revolut.duckdns.org/"
+        const val BASE_URL = "https://valutaapi.herokuapp.com/"
     }
 
     /**

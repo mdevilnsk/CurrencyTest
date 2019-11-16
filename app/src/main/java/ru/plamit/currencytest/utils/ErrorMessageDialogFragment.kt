@@ -3,10 +3,10 @@ package ru.plamit.currencytest.utils
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.annotation.DrawableRes
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

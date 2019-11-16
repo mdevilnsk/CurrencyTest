@@ -1,6 +1,6 @@
 package ru.plamit.currencytest.utils
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod

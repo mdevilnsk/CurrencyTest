@@ -9,7 +9,7 @@ import ru.plamit.currencytest.entity.CountryInfo
 interface ICountryApi{
 
     companion object {
-        const val COUNTRY_URL = "http://plamit.ru/"
+        const val COUNTRY_URL = "https://plamit.ru/"
     }
 
     /**

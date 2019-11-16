@@ -1,7 +1,7 @@
 package ru.plamit.currencytest.di
 
-import org.koin.android.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 import ru.plamit.currencytest.api.RetrofitBuilder
 import ru.plamit.currencytest.currencyList.CurrencyInteractor
 import ru.plamit.currencytest.currencyList.ICurrencyInteractor

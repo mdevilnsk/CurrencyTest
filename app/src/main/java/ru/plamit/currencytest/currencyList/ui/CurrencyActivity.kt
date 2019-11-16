@@ -1,21 +1,20 @@
 package ru.plamit.currencytest.currencyList.ui
 
-import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import kotlinx.android.synthetic.main.activity_currency.*
 import kotlinx.android.synthetic.main.currency_item.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.plamit.currencytest.R
 import ru.plamit.currencytest.currencyList.ICurrencyRouter
 import ru.plamit.currencytest.utils.ErrorMessageDialogFragment
 import ru.plamit.currencytest.utils.addTextWatcher
 import ru.plamit.currencytest.utils.currToDrawable
 import ru.plamit.currencytest.utils.gone
-import java.lang.NumberFormatException
 import java.math.BigDecimal
 
 
@@ -37,7 +36,7 @@ class CurrencyActivity :
 
     override fun onStart() {
         super.onStart()
-        currenciesListRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        currenciesListRv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         currenciesListRv.adapter = adapter
         adapter.itemSelectionListener = this
 
@@ -65,7 +64,7 @@ class CurrencyActivity :
                 } catch (e: Throwable) {
                     ErrorMessageDialogFragment.buildDialog(getString(R.string.error), getString(R.string.wrong_number), click = {
                         currencyRateEt.setText("1")
-                    }).show(supportFragmentManager,"errorDialog")
+                    }).show(supportFragmentManager, "errorDialog")
                 }
         }
     }
@@ -84,6 +83,6 @@ class CurrencyActivity :
         ErrorMessageDialogFragment.buildDialog(getString(R.string.error), getString(message), click = {
             it.dismiss()
             currencyViewModel.startLoading()
-        }).show(supportFragmentManager,"errorDialog")
+        }).show(supportFragmentManager, "errorDialog")
     }
 }

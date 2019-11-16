@@ -14,9 +14,20 @@ class CurrencyInteractor(
 ) : ICurrencyInteractor {
 
     private val countryList: MutableList<CountryInfo?> = ArrayList()
-    override fun getCurrencies(baseCurrency: String): Single<CurrencyRates> =
-            api.getLatestCurrencies(baseCurrency)
+    private var currencyRates: CurrencyRates? = null
+
+    override fun getCurrencies(baseCurrency: String, force: Boolean): Single<CurrencyRates> {
+        if (currencyRates == null || force) {
+            return api.getLatestCurrencies(baseCurrency)
+                    .map {
+                        currencyRates = it
+                        it
+                    }
                     .compose(scheduler.applySingle())
+        } else {
+            return Single.just(currencyRates)
+        }
+    }
 
     override fun getCountriesInfo(): Single<List<CountryInfo?>> {
         if (countryList.isNotEmpty() && countryList.none { it == null }) return Single.just(countryList)

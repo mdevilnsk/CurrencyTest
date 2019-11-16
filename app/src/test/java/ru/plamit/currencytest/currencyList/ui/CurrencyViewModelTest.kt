@@ -1,7 +1,7 @@
 package ru.plamit.currencytest.currencyList.ui
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.lifecycle.Observer
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.google.gson.internal.LinkedTreeMap
 import io.reactivex.Single
 import org.junit.After

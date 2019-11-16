@@ -1,12 +1,12 @@
 package ru.plamit.currencytest.currencyList.ui
 
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import kotlinx.android.synthetic.main.currency_item.view.*
-import org.koin.standalone.KoinComponent
+import org.koin.core.KoinComponent
 import ru.plamit.currencytest.R
 import ru.plamit.currencytest.utils.currToDrawable
 import ru.plamit.currencytest.utils.onClick
@@ -21,7 +21,7 @@ class CurrencyListAdapter : RecyclerView.Adapter<CurrencyListAdapter.CurrencyVie
             notifyDataSetChanged()
         }
 
-    interface ItemSelectionListener{
+    interface ItemSelectionListener {
         fun onItemSelected(currency: String)
     }
 
