@@ -8,7 +8,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import currency.exchange.rates.api.ICountryApi
 import currency.exchange.rates.api.ICurrencyApi
 import currency.exchange.rates.entity.CountryInfo
 import currency.exchange.rates.entity.CurrencyRates
@@ -22,18 +21,16 @@ class CurrencyInteractorTest {
     private lateinit var interactor: CurrencyInteractor
 
     private val api = mock(ICurrencyApi::class.java)
-    private val countryApi = mock(ICountryApi::class.java)
     private val testScheduler = DefaultSchedulerTest()
 
     @Before
     fun setUp() {
-        interactor = CurrencyInteractor(api, countryApi, testScheduler)
+        interactor = CurrencyInteractor(api, testScheduler)
     }
 
     @After
     fun tearDown() {
         verifyNoMoreInteractions(api)
-        verifyNoMoreInteractions(countryApi)
     }
 
     @Test
@@ -71,14 +68,11 @@ class CurrencyInteractorTest {
                 generateCountryInfo("RUB"),
                 generateCountryInfo("EUR")
         )
-        `when`(countryApi.getCountriesInfo())
-                .thenReturn(Single.just(countries))
         //action
         val observer = interactor.getCountriesInfo().test()
         Thread.sleep(20)
         val observer2 = interactor.getCountriesInfo().test()
         //result
-        verify(countryApi).getCountriesInfo()
         observer.assertValue(countries)
         observer2.assertValue(countries)
     }

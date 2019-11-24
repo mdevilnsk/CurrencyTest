@@ -11,8 +11,7 @@ import currency.exchange.rates.utils.IDefaultScheduler
 
 val currencyModule = module {
     single { RetrofitBuilder().createApi() }
-    single { RetrofitBuilder().createCountryApi() }
     single { DefaultScheduler() as IDefaultScheduler }
-    single { CurrencyInteractor(get(), get(), get()) as ICurrencyInteractor }
+    single { CurrencyInteractor(get(), get()) as ICurrencyInteractor }
     viewModel { CurrencyViewModel(get()) }
 }

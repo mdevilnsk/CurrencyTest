@@ -8,7 +8,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import currency.exchange.rates.BuildConfig
-import currency.exchange.rates.api.ICountryApi.Companion.COUNTRY_URL
 import currency.exchange.rates.api.ICurrencyApi.Companion.BASE_URL
 import java.util.concurrent.TimeUnit
 
@@ -32,17 +31,6 @@ class RetrofitBuilder {
                 .client(httpClient)
 
         return retrofitBuilder.build().create(ICurrencyApi::class.java)
-    }
-
-    fun createCountryApi(test: Boolean = false): ICountryApi {
-        val httpClient = buildOkHttpClient(DEFAULT_TIMEOUT, test)
-        val retrofitBuilder = Retrofit.Builder()
-                .baseUrl(COUNTRY_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
-
-        return retrofitBuilder.build().create(ICountryApi::class.java)
     }
 
     private fun buildOkHttpClient(timeout: Long, test: Boolean): OkHttpClient = OkHttpClient.Builder().apply {
