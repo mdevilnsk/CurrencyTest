@@ -46,7 +46,7 @@ class CurrencyActivity :
 
         currencyViewModel.baseView.observe(this, Observer { item ->
             item?.let {
-                loadingPb.gone()
+//                loadingPb.gone()
                 currencyFlag.setImageDrawable(VectorDrawableCompat.create(resources, currToDrawable(item.name), null))
                 currencyName.text = item.name
                 currencyDescription.text = item.description
