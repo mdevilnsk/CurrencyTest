@@ -1,11 +1,9 @@
 package currency.exchange.rates
 
-import android.app.Application
-import org.koin.core.context.startKoin
 import currency.exchange.rates.di.currencyModule
+import org.koin.core.context.startKoin
 
-class App : Application() {
-
+class App : com.squareup.picasso.App() {
     override fun onCreate() {
         super.onCreate()
         startKoin {

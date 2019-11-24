@@ -1,0 +1,3 @@
+[submodule "okhttp"]
+	path = okhttp
+	url = git@github.com:mdevilnsk/okhttp.git
